@@ -8,13 +8,16 @@ def linksVendaGA_PD(service, options) -> list:
 
     driver = webdriver.Chrome(service=service, options=options)
     
-    links_imob = ["https://www.gamavilhena.com.br/buscar?order=highest_value&direction=desc&availability=buy&city=Vilhena",
-                  "https://www.imobiliariapadraoro.com.br/buscar?order=most_relevant&direction=desc&availability=buy&city=Vilhena"]
+    imob = [["https://www.imobiliariapadraoro.com.br/buscar?order=most_relevant&direction=desc&availability=buy&city=Vilhena",
+             "https://www.gamavilhena.com.br/buscar?order=highest_value&direction=desc&availability=buy&city=Vilhena"],
+            ["a", "button"]]
 
-    for link_imob in list(links_imob[0]):
+    for index, link_imob in enumerate(imob[0]):
         driver.get(link_imob)
+        print(link_imob)
+
         while True:
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By. XPATH, '//*[@id="search"]/section[2]/imobzi-property-list/section/mat-card[1]/mat-card-content/div/button')))
+            WebDriverWait(driver, 20).until(EC.presence_of_element_located((By. XPATH, '//*[@id="search"]/section[2]/imobzi-property-list/section/mat-card[1]/mat-card-content/div/button')))
 
             for ad_card in driver.find_elements(By. CLASS_NAME, "swiper-wrapper"):
                 links.add(ad_card.get_attribute("href"))
@@ -22,12 +25,12 @@ def linksVendaGA_PD(service, options) -> list:
             for ad_card in driver.find_elements(By. CLASS_NAME, "property-gallery.info-gallery.ng-star-inserted"):
                 links.add(ad_card.get_attribute("href"))
 
-            script = "document.evaluate(\
-                        '/html/body/imobzi-root/mat-sidenav-container/mat-sidenav-content/imobzi-search/section/section[2]/imobzi-property-list/imobzi-pagination/section/button[2]',\
+            script = f"document.evaluate(\
+                        '/html/body/imobzi-root/mat-sidenav-container/mat-sidenav-content/imobzi-search/section/section[2]/imobzi-property-list/imobzi-pagination/section/{imob[1][index]}[2]',\
                         document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click()"
             
-            if driver.find_element(By. XPATH, '//*[@id="search"]/section[2]/imobzi-property-list/imobzi-pagination/section/button[2]').is_enabled(): driver.execute_script(script=script)
+            if driver.find_element(By. XPATH, f'//*[@id="search"]/section[2]/imobzi-property-list/imobzi-pagination/section/{imob[1][index]}[2]').get_attribute("class").find("disabled") == -1: driver.execute_script(script=script)
             else: break
-        driver.quit()
- 
-    return links
+
+    driver.quit()
+    return list(links)

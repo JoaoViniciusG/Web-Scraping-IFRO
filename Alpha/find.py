@@ -29,8 +29,12 @@ def findVendaAP(service, options) -> list:
 
             try: index = infos_sub_primary[1][infos_sub_primary[0].index(info_title)]
             except: 
-                if div_info.find_elements(By.TAG_NAME, "i")[0].get_attribute("class") == "icl ic-map-marker-alt":
-                    infos[6].append(div_info.text.strip())
+                try:
+                    if div_info.find_elements(By.TAG_NAME, "i")[0].get_attribute("class") == "icl ic-map-marker-alt":
+                        infos[6].append(div_info.text.strip())
+                except: pass
+                if div_info.text.find("ID:") != -1: 
+                    infos[7].append(div_info.text.replace("ID:","").strip())
                 continue
 
             info_content = float(div_info.text.strip()[:div_info.text.find(" ")].replace("m²","").replace(".","").replace(",","."))
@@ -38,11 +42,8 @@ def findVendaAP(service, options) -> list:
             if len(infos[index]) == links.index(link) + 1: infos[index][-1] += info_content
             else: infos[index].append(info_content)
 
-        #Código do imóvel
-        infos[7].append(driver.find_element(By.XPATH, '//*[@id="content"]/section/div[3]/div[1]/div[1]/h2/span').text.replace("ID:","").strip())
-
         #Valor:
-        try: infos[8].append(float(driver.find_element(By.CLASS_NAME, "imovel-ver-preco.strong").replace("R$","").replace(".","").replace(",",".").strip()))
+        try: infos[8].append(float(driver.find_element(By.CLASS_NAME, "imovel-ver-preco.strong").text.replace("Valor: R$","").replace(".","").replace(",",".").strip()))
         except: pass
 
         #Adiciona None nos campos sem informações e converte para inteiro os valores possíveis:
@@ -51,18 +52,5 @@ def findVendaAP(service, options) -> list:
             try: info[-1] = int(info[-1])
             except: pass
 
-    print(infos)
+    driver.quit()
     return infos
-
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
-
-service = Service(ChromeDriverManager().install())
-options = Options()
-options.add_argument("headless")
-options.add_argument('log-level=3')
-options.add_argument('--blink-settings=imagesEnabled=false')
-
-findVendaAP(service, options)

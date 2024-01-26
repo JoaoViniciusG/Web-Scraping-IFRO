@@ -66,17 +66,5 @@ def findVendaBC(service, options) -> list:
         for info in infos:
             if len(info) < links.index(link) + 1: info.append("None")
 
+    driver.quit()
     return infos
-
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
-
-service = Service(ChromeDriverManager().install())
-options = Options()
-options.add_argument("headless")
-options.add_argument('log-level=3')
-options.add_argument('--blink-settings=imagesEnabled=false')
-
-findVendaBC(service, options)

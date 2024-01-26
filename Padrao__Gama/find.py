@@ -16,16 +16,16 @@ def findVendaGA_PD(service, options) -> list:
     options.add_argument('log-level=3')
     options.add_argument('--blink-settings=imagesEnabled=false')
 
+    driver = webdriver.Chrome(options=options, service=service)
+    driver.maximize_window()
+
     infos_sub_primary = [["Área Útil","Área do Terreno", "Área Construída", "Dormitório", "Suíte", "Banheiro", "Vaga"],
                          [0,1,2,3,4,5,6]]
     
-    def scraping_link(link):
-        driver = webdriver.Chrome(options=options, service=service)
-        driver.maximize_window()
-
-        #Área útil, área do terreno, área do construída, dormitórios, suítes, banheiros, vagas garagem, descrição, código do imóvel, bairro, valor
-        infos = [[],[],[],[],[],[],[],[],[],[],[]]
-
+    #Área útil, área do terreno, área do construída, dormitórios, suítes, banheiros, vagas garagem, descrição, código do imóvel, bairro, valor
+    infos = [[],[],[],[],[],[],[],[],[],[],[]]
+    
+    for link in links:
         driver.get(link)
         print(link)
 
@@ -62,8 +62,5 @@ def findVendaGA_PD(service, options) -> list:
         for info_verify in infos:
             if len(info_verify) < links.index(link) + 1: info_verify.append("None")
 
-        driver.quit()
-        print(infos)
-        return infos
-
-    res = Parallel(n_jobs=5, prefer="threads")(delayed(scraping_link)(link) for link in links)
+    driver.quit()
+    return infos
