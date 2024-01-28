@@ -4,8 +4,8 @@ def linksVendaFB_CF_SR(service, options) -> list:
     from time import sleep
 
     links = []
-    links_imob = ["http://www.fbcorretordeimoveis.com.br/imovel/?finalidade=venda&tipo=&cid=Vilhena&bairro=0&sui=&ban=&gar=&dor=&pag=1",
-                  "https://www.caiofernandocorretor.com.br/imovel/?finalidade=venda&tipo=&cid=Vilhena&bairro=0&sui=&ban=&gar=&dor=&pag=1"]
+    links_imob = ["http://www.fbcorretordeimoveis.com.br/imovel/?finalidade=&tipo=&cid=Vilhena&bairro=0&sui=&ban=&gar=&dor=&pag=1",
+                  "https://www.caiofernandocorretor.com.br/imovel/?finalidade=&tipo=&cid=Vilhena&bairro=0&sui=&ban=&gar=&dor=&pag=1"]
                   #"http://www.samuelrichard.com.br/imovel/?finalidade=venda&tipo=&cid=Vilhena&bairro=0&sui=&ban=&gar=&dor=&pag=1"]
 
     driver = webdriver.Chrome(options=options, service=service)

@@ -7,6 +7,8 @@ from Carlos_depine__Imobiliaria_Ceara.find import findVendaCD_IC
 from Bortolanzza.find import findVendaBZ
 from Futura.find import findVendaFT
 from Maria_Eich.find import findVendaME
+from Alpha.find import findVendaAP
+from Balcao.find import findVendaBC
 
 from joblib import Parallel, delayed
 from webdriver_manager.chrome import ChromeDriverManager

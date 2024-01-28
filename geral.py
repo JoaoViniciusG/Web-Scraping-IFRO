@@ -1,4 +1,4 @@
-from imports import findVendaAR, findVendaBZ, findVendaCD_IC, findVendaDR, findVendaFB_CF_SR, findVendaGA_PD, findVendaVT, findVendaFT, findVendaME, Parallel, delayed, service, options
+from imports import findVendaAR, findVendaBZ, findVendaCD_IC, findVendaDR, findVendaFB_CF_SR, findVendaGA_PD, findVendaVT, findVendaFT, findVendaME, findVendaBC, findVendaAP, Parallel, delayed, service, options
 from time import time
 from notification import notify
 
@@ -17,6 +17,8 @@ def DR() -> list: return findVendaDR(service, options)
 def FB_CF_SR() -> list: return findVendaFB_CF_SR(service, options)
 def FT() -> list: return findVendaFT(service, options)
 def ME() -> list: return findVendaME(service, options)
+def AP() -> list: return findVendaAP(service, options)
+def BC() -> list: return findVendaBC(service, options)
 
 def execute_scripts(def_file):
     try:
