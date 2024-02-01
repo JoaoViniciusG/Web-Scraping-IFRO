@@ -16,7 +16,7 @@ def findVendaME(service, options) -> list:
 
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         for div_info in driver.find_elements(By. CLASS_NAME, "esquerda_ficha")[0].find_elements(By. CLASS_NAME, "detalhe"):
             for text_info in div_info.text.replace("sendo","/").split(" / "):

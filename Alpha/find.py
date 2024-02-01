@@ -16,7 +16,7 @@ def findVendaAP(service, options) -> list:
     
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         divs_infos_ad = []
 

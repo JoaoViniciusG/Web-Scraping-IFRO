@@ -27,7 +27,7 @@ def findVendaGA_PD(service, options) -> list:
     
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By. XPATH, '//*[@id="widget-container"]/mat-card/imobzi-widget-card/mat-card/mat-card-actions/imobzi-buttons-actions/button')))
 
@@ -64,16 +64,3 @@ def findVendaGA_PD(service, options) -> list:
 
     driver.quit()
     return infos
-
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
-
-service = Service(ChromeDriverManager().install())
-options = Options()
-#options.add_argument("headless")
-options.add_argument('log-level=3')
-options.add_argument('--blink-settings=imagesEnabled=false')
-
-findVendaGA_PD(service, options)

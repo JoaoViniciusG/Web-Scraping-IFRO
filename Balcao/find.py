@@ -16,7 +16,7 @@ def findVendaBC(service, options) -> list:
     
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         divs_list = driver.find_element(By.XPATH, '//*[@id="__next"]/div/div/main/div/div[1]/div[4]/div[2]').find_elements(By.TAG_NAME, "section")[-1].find_elements(By.TAG_NAME, "div")
 

@@ -38,6 +38,5 @@ def linksVendaGA_PD(service, options) -> list:
             if driver.find_element(By. XPATH, f'//*[@id="search"]/section[2]/imobzi-property-list/imobzi-pagination/section/{imob[1][index]}[2]').get_attribute("class").find("disabled") == -1: driver.execute_script(script=script)
             else: break
 
-    print(len(links))
     driver.quit()
     return list(links)

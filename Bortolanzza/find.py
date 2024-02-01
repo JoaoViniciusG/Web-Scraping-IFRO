@@ -17,7 +17,7 @@ def findVendaBZ(service, options) -> list:
 
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         infos_text = driver.find_element(By. XPATH, '//*[@id="conteudo_bg1"]/table[1]/tbody/tr/td[1]/table[3]/tbody/tr/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td').text.split("\n")
 

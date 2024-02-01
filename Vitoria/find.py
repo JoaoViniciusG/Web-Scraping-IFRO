@@ -21,7 +21,7 @@ def findVendaVT(service, options) -> list:
 
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By. XPATH, '//*[@id="ContatoCx1"]/div[2]/div[3]/input')))
 

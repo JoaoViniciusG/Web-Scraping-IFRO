@@ -5,7 +5,7 @@ comp_name = input("Insira o nome da imobiliária: ").strip().replace(" ","_")
 acron_name = input("Insira a sigla: ")[:2].upper()
 url = input("Insira o url para coleta dos links dos anúncios: ")
 
-path_dir = "C:/Users/joaov/OneDrive/Área de Trabalho/Backup Pendrive/Data/Web Scraping"
+path_dir = "C:/Users/joaov/OneDrive/Área de Trabalho/Web Scraping"
 path = os.path.join(path_dir, comp_name)
 
 os.mkdir(path)

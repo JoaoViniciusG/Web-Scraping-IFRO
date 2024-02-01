@@ -18,7 +18,7 @@ def findVendaAR(service, options) -> list:
 
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         infos_primary = driver.find_elements(By. CLASS_NAME, "item-info.digital")
 

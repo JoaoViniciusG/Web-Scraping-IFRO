@@ -17,7 +17,7 @@ def findVendaDR(service, options) -> list:
 
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         for div in driver.find_elements(By. CLASS_NAME, "imodet_item1")[1:]:
             try: 

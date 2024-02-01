@@ -18,7 +18,7 @@ def findVendaCD_IC(service, options) -> list:
     infos_sub_primary = [["Área Útil", "Área Terreno", "Área Total", "Dormitórios", "Suítes", "Banheiros", "Box (N˚ Garagem)", "Venda"],[0,1,2,3,4,5,6,11]]
     for link in links:
         driver.get(link)
-        print(link)
+        print(f"{links.index(link)+1}/{len(links)}", link)
 
         for info_primary in driver.find_elements(By. CLASS_NAME, "col-xs-12.col-sm-6"):
             try: index = infos_sub_primary[1][infos_sub_primary[0].index(info_primary.find_elements(By. TAG_NAME, "span")[0].text)]
