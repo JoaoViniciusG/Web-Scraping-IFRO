@@ -6,11 +6,13 @@ from Deiro.find import findVendaDR
 from Carlos_depine__Imobiliaria_Ceara.find import findVendaCD_IC
 from Bortolanzza.find import findVendaBZ
 from Futura.find import findVendaFT
-from Maria_Eich.find import findVendaME
+from Maria_Eich__Colatto.find import findVendaME_CC
 from Alpha.find import findVendaAP
 from Balcao.find import findVendaBC
 from Claudio_Henrique.find import findVendaCH
 from Jaine_Lima.find import findVendaJL
+from Donadoni_Corretor.find import findVendaDC
+from Elia_Meireles.find import findVendaEM
 
 from joblib import Parallel, delayed
 from webdriver_manager.chrome import ChromeDriverManager

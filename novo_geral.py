@@ -1,4 +1,4 @@
-from imports import findVendaAR, findVendaBZ, findVendaCD_IC, findVendaDR, findVendaFB_CF_SR_CR, findVendaGA_PD, findVendaVT, findVendaFT, findVendaME, findVendaBC, findVendaAP, findVendaCH, findVendaJL, Parallel, delayed, service, options
+from imports import findVendaAR, findVendaBZ, findVendaCD_IC, findVendaDR, findVendaFB_CF_SR_CR, findVendaGA_PD, findVendaVT, findVendaFT, findVendaME_CC, findVendaBC, findVendaAP, findVendaCH, findVendaJL, findVendaDC, findVendaEM, Parallel, delayed, service, options
 from time import time
 from notification import notify
 
@@ -6,7 +6,7 @@ time_start = time()
 
 #Execution status: [estate acronym: str, successfully executed: bool, exception: Exception (optional)]
 exec_status = []
-instances = ["BZ", "VT", "AR", "CD_IC", "FB_CF_SR_CR", "FT", "ME", "AP", "BC", "GA_PD", "CH", "JL"]
+instances = ["BZ", "VT", "AR", "CD_IC", "FB_CF_SR_CR", "FT", "ME_CC", "AP", "BC", "GA_PD", "DC", "CH", "JL", "EM"]
 
 for def_file in instances:
     try:
