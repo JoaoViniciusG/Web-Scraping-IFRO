@@ -13,6 +13,10 @@ from Claudio_Henrique.find import findVendaCH
 from Jaine_Lima.find import findVendaJL
 from Donadoni_Corretor.find import findVendaDC
 from Elia_Meireles.find import findVendaEM
+from ReMax.find import findVendaRM
+from Joao_Paulo.find import findVendaJP
+from Pretto_Corretora.find import findVendaPC
+from Wender.find import findVendaWE
 
 from joblib import Parallel, delayed
 from webdriver_manager.chrome import ChromeDriverManager
