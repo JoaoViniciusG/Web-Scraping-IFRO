@@ -14,7 +14,7 @@ def linksVendaEM(service, options) -> list:
                 if div_ad.find_elements(By.CLASS_NAME, "label.label-danger")[0].text.lower() in ("vendido", "alugado"): continue
             except: pass
 
-            #Revome os imóveis rurais:
+            #Remove os imóveis rurais:
             if div_ad.find_elements(By.TAG_NAME, "h2")[0].text.lower().find("rural") != -1: continue
             
             links.append(div_ad.find_elements(By.TAG_NAME, "a")[0].get_attribute("href"))

@@ -10,6 +10,7 @@ def linksVendaBZ(service, options) -> list:
     while True:
         for td in driver.find_elements(By. TAG_NAME, 'td'):
             if td.get_attribute("width") == "70%":
+                if td.find_element(By.TAG_NAME, "h2").text.lower().find("rural") != -1: continue
                 links.append(td.find_elements(By. TAG_NAME, "a")[0].get_attribute("href"))
 
         next_button = driver.find_element(By. XPATH, '//*[@id="conteudo_bg1"]/table[1]/tbody/tr/td[1]/table[4]/tbody/tr/td').find_elements(By. TAG_NAME, "a")[-1]
@@ -17,5 +18,6 @@ def linksVendaBZ(service, options) -> list:
             break
         next_button.click()
 
+    print(len(links))
     driver.quit()
     return links

@@ -11,12 +11,15 @@ def linksVendaFT(service, options) -> list:
 
     while True:
         for tag_a in driver.find_elements(By. CLASS_NAME, "resultado.resultado_lista"):
-            if tag_a.find_elements(By. CLASS_NAME, "localizacao")[0].text.lower().find("vilhena") != -1:
-                links.append(tag_a.find_elements(By. TAG_NAME, "a")[0].get_attribute("href"))
+            #Remove imóveis rurais:
+            if tag_a.find_element(By.CLASS_NAME, "tipo").text.lower() in ("fazenda", "chacara", "sitio"): continue
 
-        if num_page >= ceil(int(driver.find_element(By. XPATH, "/html/body/div[9]/div[1]/div[2]/div[1]/h1/b").text)/12): break
+            if tag_a.find_elements(By. CLASS_NAME, "localizacao")[0].text.lower().find("vilhena") != -1:
+                links.append(tag_a.find_element(By. TAG_NAME, "a").get_attribute("href"))
+
+        if num_page >= ceil(int(driver.find_element(By. XPATH, "/html/body/div[9]/div[1]/div[2]/div[1]/h1/b").text)/48): break
         num_page += 1
-        driver.get(f"https://www.futura-vilhena.com/imoveis/ro/ordem-valor/resultado-crescente/quantidade-12/pagina-{num_page}/")
+        driver.get(f"https://www.futura-vilhena.com/imoveis/ro/ordem-valor/resultado-crescente/quantidade-48/pagina-{num_page}/")
 
     driver.quit()
     return links

@@ -13,6 +13,14 @@ def linksVendaCD_IC(service, options) -> list:
         driver.get(link)
         while True:
             for element_div in driver.find_elements(By. CLASS_NAME, "property-image"):
+                #Remove imóveis rurais:
+                if element_div.find_element(By.CLASS_NAME, "property-title").text.lower().find("rural") != -1: continue
+
+                #Remove os lançmentos de bairros/condomínios:
+                try:
+                    if element_div.find_element(By.CLASS_NAME, "post-status").text.lower() == "lançamento": continue
+                except: pass
+
                 links.append(element_div.find_elements(By. TAG_NAME, "a")[0].get_attribute("href"))
 
             if driver.find_element(By. ID, 'proximo').get_attribute("class") != "btn btn-block btn-theme next": break

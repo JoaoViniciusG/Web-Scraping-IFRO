@@ -58,4 +58,5 @@ def findVendaAR(service, options) -> list:
     time_final = time()
     print(f"{time_final - time_start} segundos")
 
+    driver.quit()
     return infos
