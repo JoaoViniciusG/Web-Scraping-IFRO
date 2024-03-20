@@ -3,12 +3,13 @@ findVendaFT, findVendaME_CC, findVendaBC, findVendaAP, findVendaCH, findVendaJL,
 findVendaJP, findVendaPC, findVendaWE, Parallel, delayed, service, options
 from time import time
 from notification import notify
+from coleta_siglas import coleta_siglas
 
 time_start = time()
 
 #Execution status: [estate acronym: str, successfully executed: bool, exception: Exception (optional)]
 exec_status = []
-instances = ["BZ", "VT", "AR", "CD_IC", "FB_CF_SR_CR", "FT", "ME_CC", "AP", "BC", "GA_PD", "DC", "CH", "JL", "EM", "RM", "JP", "PC", "WE"]
+instances = coleta_siglas()
 
 for def_file in instances:
     try:
