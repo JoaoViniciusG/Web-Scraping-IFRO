@@ -1,6 +1,7 @@
 def findVendaAP(service, options) -> list:
     from selenium import webdriver
     from selenium.webdriver.common.by import By
+    from findWithCEP import findCep
     try: from AP__Alpha.main import linksVendaAP
     except: from main import linksVendaAP
 
@@ -8,17 +9,20 @@ def findVendaAP(service, options) -> list:
 
     driver = webdriver.Chrome(options=options, service=service)
 
-    #Área do Terreno, área privativa, dormitórios, suítes, banheiros, vagas garagem, endereço, código do imóvel, valor
-    infos = [[],[],[],[],[],[],[],[],[]]
+    #Url, área total, área construída, dormitórios, suítes, banheiros, vagas garagem, bairro, valor, descrição
+    infos = [[],[],[],[],[],[],[],[],[],[]]
 
     infos_sub_primary = [["de lote", "área privativa", "demi-suites", "suíte", "lavabo", "banheiro", "vaga"],
-                         [0,1,2,3,4,4,5]]
+                         [1,2,3,4,5,5,6]]
     
     for link in links:
         driver.get(link)
         print(f"{links.index(link)+1}/{len(links)}", link)
+        infos[0].append(link)
 
         divs_infos_ad = []
+        ad_cep = ""
+        ad_address = ""
 
         for div_infos in driver.find_elements(By.CLASS_NAME, "block.imovel-ver-informacoes.width-100"):
 
@@ -31,10 +35,10 @@ def findVendaAP(service, options) -> list:
             except: 
                 try:
                     if div_info.find_elements(By.TAG_NAME, "i")[0].get_attribute("class") == "icl ic-map-marker-alt":
-                        infos[6].append(div_info.text.strip())
+                        ad_address = div_info.text.strip()
                 except: pass
-                if div_info.text.find("ID:") != -1: 
-                    infos[7].append(div_info.text.replace("ID:","").strip())
+                if div_info.text.find("CEP") != -1: 
+                    ad_cep = div_info.text.replace("CEP","").replace("-","").strip()
                 continue
 
             info_content = float(div_info.text.strip()[:div_info.text.find(" ")].replace("m²","").replace(".","").replace(",","."))
@@ -45,6 +49,20 @@ def findVendaAP(service, options) -> list:
         #Valor:
         try: infos[8].append(float(driver.find_element(By.CLASS_NAME, "imovel-ver-preco.strong").text.replace("Valor: R$","").replace(".","").replace(",",".").strip()))
         except: pass
+
+        #Descrição:
+        descrip = driver.find_element(By.CLASS_NAME, "box-editor").text
+        infos[9].append(descrip)
+
+        #Bairro por CEP:
+        if ad_cep != "":
+            res_cep = findCep(ad_cep)
+            if res_cep[0] == True:
+                infos[7].append(res_cep[1])
+    
+        #Bairro por endereço:
+        if len(infos[7]) < links.index(link) + 1:
+            infos[7].append(ad_address)
 
         #Adiciona None nos campos sem informações e converte para inteiro os valores possíveis:
         for info in infos:

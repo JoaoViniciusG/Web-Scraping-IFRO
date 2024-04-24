@@ -22,12 +22,12 @@ def linksVendaJP(service) -> list:
     driver.find_element(By.XPATH, "/html/body/div[1]/div/main/div/div/div[2]/div[2]/form/div/div[2]/div[6]/div/input").send_keys("Vilhena")
     sleep(1)
     height = driver.execute_script("return document.body.scrollHeight")
-    for num in [-1, 1/4, 2/4, 3/4]:
+    for num in [-1, 1/5, 2/5, 3/5, 4/5]:
         ActionChains(driver).scroll_by_amount(0, int(height*num)).perform()
-        sleep(1)
+        sleep(2)
 
     for div_ad in driver.find_elements(By.CLASS_NAME, "MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation0.css-1kbp4ht"):
-        ad_title = div_ad.find_elements(By.CLASS_NAME, "MuiTypography-root.MuiTypography-body1.MuiListItemText-primary.css-1wilzx2")[0].text.lower()
+        ad_title = div_ad.find_elements(By.CLASS_NAME, "MuiTypography-root.MuiTypography-body1.MuiListItemText-primary")[0].text.lower()
         
         #Remove imóveis rurais:
         for word in words_to_search:
@@ -39,3 +39,11 @@ def linksVendaJP(service) -> list:
 
     driver.quit()
     return links
+
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
+
+service = Service(ChromeDriverManager().install())
+linksVendaJP(service)

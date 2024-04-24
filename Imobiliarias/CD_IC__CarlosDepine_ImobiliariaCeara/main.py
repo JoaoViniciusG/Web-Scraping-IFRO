@@ -4,24 +4,25 @@ def linksVendaCD_IC(service, options) -> list:
     from time import sleep
 
     links = []
-    links_imob = ["https://carlosdepine.com/imoveis/Venda/Tipo-de-imovel/Cidade/Bairro/Minimo_Area-minima/Maximo_Area-maxima/Codigo/Quartos_Garagem_Banheiros",
-                  "https://imobiliariaceara.com.br/imoveis/Venda/Tipo-de-imovel/Cidade/Bairro/Minimo_Area-minima/Maximo_Area-maxima/Codigo/Quartos_Garagem_Banheiros"]
+    links_imob = ["https://carlosdepine.com/imoveis/Tipo-de-negocio/Tipo-de-imovel/Vilhena/Bairro/Minimo/Maximo/Codigo/Quartos-Garagem",
+                  "https://imobiliariaceara.com.br/imoveis/Tipo-de-negocio/Tipo-de-imovel/Vilhena/Bairro/Minimo/Maximo/Codigo/Quartos-Garagem"]
 
     driver = webdriver.Chrome(options=options, service=service)
 
     for link in links_imob:
         driver.get(link)
         while True:
-            for element_div in driver.find_elements(By. CLASS_NAME, "property-image"):
-                #Remove imóveis rurais:
-                if element_div.find_element(By.CLASS_NAME, "property-title").text.lower().find("rural") != -1: continue
+            for element_div in driver.find_elements(By. CLASS_NAME, "property2.property-list"):
+                #Remove imóveis rurais e lançamentos de bairros/condomínios:
+                if element_div.find_element(By.CLASS_NAME, "property-location").text.lower().find("rural") != -1: continue
 
-                #Remove os lançmentos de bairros/condomínios:
-                try:
-                    if element_div.find_element(By.CLASS_NAME, "post-status").text.lower() == "lançamento": continue
-                except: pass
+                element_title = element_div.find_element(By.CLASS_NAME, "property-type").text.lower()
 
-                links.append(element_div.find_elements(By. TAG_NAME, "a")[0].get_attribute("href"))
+                for word in ("fazenda", "chacara", "chácara", "sitio", "sítio", "lançamento", "lancamento"):
+                    if element_title.find(word) != -1: 
+                        break
+                else:
+                    links.append(element_div.find_element(By. TAG_NAME, "a").get_attribute("href"))
 
             if driver.find_element(By. ID, 'proximo').get_attribute("class") != "btn btn-block btn-theme next": break
             driver.find_element(By. ID, 'proximo').click()

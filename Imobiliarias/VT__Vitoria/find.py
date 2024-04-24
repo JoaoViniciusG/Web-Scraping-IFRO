@@ -3,86 +3,109 @@ def findVendaVT(service, options) -> list:
     from selenium.webdriver.common.by import By
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as EC 
-    try: from VT__Vitoria.main import linksVendaVT
+    try: from Imobiliarias.VT__Vitoria.main import linksVendaVT
     except: from main import linksVendaVT
     
-    links = linksVendaVT(service, options)
+    links_infos = linksVendaVT(service, options)
 
     driver = webdriver.Chrome(options=options, service=service)
 
-    #Área total, área do terreno, área construída, código do imóvel, dimensões do terreno (frente/fundo X esquerda/direita), dormitórios, banheiros, suítes, vagas garagem, descrição
-    #características, cômodos, proximidades, bairro, valor
+    #(0) Url, (1) área total, (2) área do terreno (excluída ao final), (3) área construída, (4) área útil (excluída ao final),(5) dormitórios, (6) suítes, (7) banheiros, (8) vagas garagem, (9) bairro, (10) valor, (11) tipo de imóvel, (12) tipo de negócio, (13) descrição
+    infos = [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 
-    infos = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
-
-    infos_sub_areas = ["Área Total:", "Área Terreno:", "Área Construída:", "Código:"]
-    infos_sub_dimensions = ["Terreno Frente:", "Terreno Fundo:", "Terreno Esquerda:", "Terreno Direita:"]
+    infos_sub_primary = [["total", "terreno", "construído", "útil", "dormitório", "suíte", "banheiro", "vaga"],
+                         [1,2,3,4,5,6,7,8]]
     
 
-    for link in links:
+    for index_link, link in enumerate(links_infos[0]):
         driver.get(link)
-        print(f"{links.index(link)+1}/{len(links)}", link)
+        print(f"{links_infos[0].index(link)+1}/{len(links_infos[0])}", link)
+        infos[0].append(link)
+        infos[11].append(links_infos[1][index_link])
+        infos[12].append(links_infos[2][index_link])
 
         WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By. XPATH, '//*[@id="ContatoCx1"]/div[2]/div[3]/input')))
 
-        #Áreas e código do imóvel:
-        infos_dimensions_and_code = driver.find_element(By. ID, "detimo_desc").text.split("|")
+        for div_info in driver.find_elements(By.CLASS_NAME, "detimo_itensfonte"):
+            for info_text in div_info.text.replace(".","").replace(",",".").replace(":","").strip().lower().split("\n"):
+                if info_text == "": continue
 
-        dimensions = []
+                for text in info_text.split(" "):
+                    try:
+                        text = float(text)
+                        if text == int(text): text = int(text)
 
-        for i, sub in enumerate([infos_sub_areas, infos_sub_dimensions]):
-            for index, info_d_sub in enumerate(sub):
-                for info_d_and_c in infos_dimensions_and_code:
-                    if i == 0:
-                        try: 
-                            info_d_and_c.index(info_d_sub)
-                            infos[index].append(info_d_and_c.split(info_d_sub)[-1].strip().replace(",","."))
-                            del infos_dimensions_and_code[infos_dimensions_and_code.index(info_d_and_c)]
-                        except: pass
-                    else:
-                        try: 
-                            info_d_and_c.index(info_d_sub)
-                            dimensions.append(info_d_and_c.split(info_d_sub)[-1].replace(",",".").replace("Metros","").strip())
-                        except: pass
+                        info_value = text
+                    except:
+                        info_title = text
 
-        if len(dimensions) == 2: infos[4].append(f"{dimensions[0]}X{dimensions[1]}")
-        elif len(dimensions) == 4: infos[4].append(f"{dimensions[0]}/{dimensions[1]}X{dimensions[2]}/{dimensions[3]}")
+                if info_title[-1] == "s": info_title = info_title[:-1]
+                
+                index = infos_sub_primary[1][infos_sub_primary[0].index(info_title)]
 
-        #Dormitórios, banheiros, suítes, vagas na garagem:
-        for index, element in enumerate(driver.find_elements(By. CLASS_NAME, "detimo_itensfonte")[1:]):
-            if element.text != "":
-                infos[5 + index].append(element.text.split(" ")[0].strip())
-
-        #Descrição:
-        try: infos[9].append(driver.find_element(By. XPATH, '//*[@id="detimo_descricao3"]/h1').text)
-        except: pass
-
-        #Características, cômodos, proximidades:
-        infos_sub_description = ["Características", "Cômodos", "Proximidades"]
-
-        for u in driver.find_elements(By. CLASS_NAME, "fonte_padrao.imovel_cx_caracteristicas"):
-            index = infos_sub_description.index(u.find_element(By. CLASS_NAME, "cxSpan").text)
-
-            text_description = ""
-            for element in u.find_elements(By. CLASS_NAME, "cxItem"):
-                text_description += element.text + "\n"
-
-            text_description = text_description[0:-1]
-            infos[10 + index].append(text_description)
-
+                infos[index].append(info_value)
 
         #Bairro:
-        text_neighborhood = driver.find_element(By. XPATH, '//*[@id="detimo_titulo"]/h1').text
+        for neigh_loop_text in driver.find_element(By.ID, "detimo_titulo").text.split(","):
+            if neigh_loop_text.find("bairro ") != -1:
+                neigh_text = neigh_loop_text.replace("bairro","").strip()
+        
+                infos[9].append(neigh_text)
+                break
 
-        infos[13].append(text_neighborhood.split(",")[2].replace("bairro","").strip())
 
         #Valor:
-        text_price = driver.find_element(By. CLASS_NAME, "detimo_itensfonteval.li_ftcor").find_element(By. TAG_NAME, "span").text
-        try: infos[14].append(float(text_price.split("R$")[-1].replace(".","").replace(",",".")))
+        try:
+            price_text = driver.find_element(By.CLASS_NAME, "detimo_itensfonteval.li_ftcor").text.split("R$")[-1].strip().replace(".","").replace(",",".")
+
+            infos[10].append(float(price_text))
         except: pass
 
-        #Adiciona None nos campos sem informações
+
+        #Descrição:
+        for div_descricao in driver.find_elements(By.ID, "detimo_descricao"):
+            if div_descricao.find_element(By.TAG_NAME, "span").text.upper() == "DESCRIÇÃO DO IMÓVEL":
+                try:
+                    desc_text = div_descricao.find_element(By.TAG_NAME, "h1").text
+                except:
+                    desc_text = div_descricao.find_element(By.ID, "detimo_descricao3").text
+
+                infos[13].append(desc_text)
+                break
+
+        #Adiciona None nos campos sem informações:
         for info_verify in infos:
-            if len(info_verify) < links.index(link) + 1: info_verify.append("None")
+            if len(info_verify) < links_infos[0].index(link) + 1: info_verify.append("None")
+
+        #Filtra a área total correta entre os campos "Área Total" e "Área do Terreno":
+        areaTotal = infos[1][-1]
+        areaTerreno = infos[2][-1]
+        areaCons = infos[3][-1]
+        areaUtil = infos[4][-1] 
+
+        areas = [infos[1][-1], infos[2][-1], infos[3][-1], infos[4][-1]]
+
+        areas = sorted([val for val in areas if val != "None"])
+        
+        areas = sorted(list(set(areas)))
+
+        if areaTotal != "None" and areaTotal == areas[-1]: 
+            pass
+
+        elif len(areas) > 1 or (len(areas) == 1 and (areas[0] == areaTotal or areas[0] == areaTerreno)):
+            infos[1][-1] = areas[-1]
+
+        #Filtra a área construída correta entre todos os campos de área caso o campo "Área Construída" seja igual a "None":
+            
+        if areaCons != "None" and areaCons == areas[0]:
+            pass
+
+        elif len(areas) > 1 or (len(areas) == 1 and (areas[0] == areaCons or areas[0] == areaUtil)):
+            infos[3][-1] = areas[0]
     
+    #Deleta o campo "Área do Terreno" e "Área Privativa" pois todas as suas informações pertinentes já foram movidas para o campo "Área Total":
+    del infos[2]
+    del infos[3]
+    
+    driver.quit()
     return infos

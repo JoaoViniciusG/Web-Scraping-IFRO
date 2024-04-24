@@ -14,36 +14,37 @@ def findVendaJL(service, options) -> list:
     driver = webdriver.Chrome(options=options, service=service)
     driver.maximize_window()
 
-    #Área total, área construída, dormitórios, suítes, banheiros, vagas, bairro, código do imóvel, valor
-    infos = [[],[],[],[],[],[],[],[],[]]
+    #Url, área total, área construída, dormitórios, suítes, banheiros, vagas garagem, bairro, valor, descrição
+    infos = [[],[],[],[],[],[],[],[],[],[]]
 
     infos_sub_h2 = [["cômodos", "áreas"],
                     ["infos_sub_rooms", "infos_sub_areas"]]
     
     infos_sub_rooms = [["dormitório", "suíte", "banheiro", "garage"],
-                       [2,3,4,5], " ", -1]
+                       [3,4,5,6], " ", -1]
     infos_sub_areas = [["terreno área total", "área cotruída"],
-                       [0,1], ":", 0]
+                       [1,2], ":", 0]
 
     for link in links:
         driver.get(link)
         print(f"{links.index(link)+1}/{len(links)}", link)
+        infos[0].append(link)
 
         for div_master_info in driver.find_elements(By.CLASS_NAME, "sc-duc0lc-0.iRRdZZ"):
             try: 
                 div_master_title = div_master_info.find_elements(By.TAG_NAME, "h2")[0].text.lower()
 
-                #Código do imóvel:
-                if div_master_title == "outras informações":
-                    for index_code, text_div_code in enumerate(div_master_info.text.split("\n")):
-                        if text_div_code == "Referência:": 
-                            infos[7].append(div_master_info.text.split("\n")[index_code+1]); break 
-                        
+                #Descrição:
+                if div_master_title == "descrição do imóvel":
+                    descrip = div_master_info.find_element(By.TAG_NAME, "div").text
+
+                    infos[9].append(descrip)
+
                 #Bairro:                
                 elif div_master_title == "localização":
                     location_text = div_master_info.find_elements(By.TAG_NAME, "span")[0].text.split("-")
                     for index_neigh, text_span_neigh in enumerate(location_text):
-                        if text_span_neigh.find("Vilhena/RO") != -1: infos[6].append(location_text[index_neigh - 1].strip())
+                        if text_span_neigh.find("Vilhena/RO") != -1: infos[7].append(location_text[index_neigh - 1].strip())
             except: pass
             
             try: infos_sub = eval(infos_sub_h2[1][infos_sub_h2[0].index(div_master_title)])

@@ -1,29 +1,39 @@
 from imports import findVendaAR, findVendaBZ, findVendaCD_IC, findVendaDR, findVendaFB_CF_SR_CR, findVendaGA_PD, findVendaVT,\
-findVendaFT, findVendaME_CC, findVendaBC, findVendaAP, findVendaCH, findVendaJL, findVendaDC, findVendaEM, findVendaRM,\
-findVendaJP, findVendaPC, findVendaWE, Parallel, delayed, service, options
-from time import time
-from notification import notify
+findVendaFT, findVendaME_CC, findVendaBC, findVendaCH, findVendaDC, findVendaEM, findVendaRM, findVendaPC, service, options
 from coleta_siglas import coleta_siglas
-
-time_start = time()
+import pandas as pd
 
 #Execution status: [estate acronym: str, successfully executed: bool, exception: Exception (optional)]
 exec_status = []
-instances = coleta_siglas()
+#instances = coleta_siglas()
+instances = ["CD_IC"]
+
+columns = ["Url", "Área Total", "Área Construída", "Dormitórios", "Suítes", "Banheiros", "Garagem", "Bairro", "Valor", "Tipo do Imóvel", "Tipo de Negócio", "Descrição"]
 
 for def_file in instances:
+    #Executar o arquivo:
+    print(f"Executando {def_file}")
+
     try:
-        print(f"Executing {def_file}")
         response = eval(f"findVenda{def_file}(service, options)")
-        print(f"{def_file} completed!") 
-        exec_status.append([def_file, True])
-        print(response)
-    
     except Exception as exc: 
-        print(f"Error in {def_file}\n", exc)
+        print(f"Erro em {def_file}\n", exc)
         exec_status.append([def_file, False])
+        continue
 
-time_final = time()
-print(f"Demorou {time_final - time_start} segundos")
+    #Finalização:
+    print(f"{def_file} completo!") 
+    exec_status.append([def_file, True])
+    
+    #Tratamento:
+    #list_res = [pd.Series(res_list) for res_list in response]
+    list_res = []
 
-notify(exec_status)
+    for f in range(len(response[0])):
+        list_res.append([n[f] for n in response])
+
+    #Salvar:
+    table_info = pd.DataFrame(list_res)
+
+    table_info.columns = columns
+    table_info.to_excel(f"Planilhas/list_{def_file}.xlsx", index=False)

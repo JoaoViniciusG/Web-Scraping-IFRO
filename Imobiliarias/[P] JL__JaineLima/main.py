@@ -5,7 +5,7 @@ def linksVendaJL(service, options) -> list:
     links = []
 
     driver = webdriver.Chrome(options=options, service=service)
-    driver.get('https://jainelimacorretora.com.br/comprar-alugar/imoveis/vilhena-ro?sort=-created_at%2Cid&offset=1&limit=21&typeArea=total_area&floorComparision=equals')
+    driver.get('https://jainelimacorretora.com.br/comprar-alugar/imoveis/vilhena-ro')
 
     while True:
         for div_ad in driver.find_elements(By.CLASS_NAME, "src__Box-sc-1sbtrzs-0.sc-hlcmlc-0.jeFFeJ.CardProperty"):

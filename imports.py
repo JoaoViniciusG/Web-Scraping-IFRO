@@ -7,16 +7,12 @@ from Imobiliarias.CD_IC__CarlosDepine_ImobiliariaCeara.find import findVendaCD_I
 from Imobiliarias.BZ__Bortolanzza.find import findVendaBZ
 from Imobiliarias.FT__Futura.find import findVendaFT
 from Imobiliarias.ME_CC__MariaEich_Colatto.find import findVendaME_CC
-from Imobiliarias.AP__Alpha.find import findVendaAP
 from Imobiliarias.BC__Balcao.find import findVendaBC
 from Imobiliarias.CH__ClaudioHenrique.find import findVendaCH
-from Imobiliarias.JL__JaineLima.find import findVendaJL
 from Imobiliarias.DC__DonadoniCorretor.find import findVendaDC
 from Imobiliarias.EM__EliaMeireles.find import findVendaEM
 from Imobiliarias.RM__ReMax.find import findVendaRM
-from Imobiliarias.JP__JoaoPaulo.find import findVendaJP
 from Imobiliarias.PC__PrettoCorretora.find import findVendaPC
-from Imobiliarias.WE__Wender.find import findVendaWE
 
 from joblib import Parallel, delayed
 from webdriver_manager.chrome import ChromeDriverManager
