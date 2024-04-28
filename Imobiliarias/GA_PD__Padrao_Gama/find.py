@@ -3,7 +3,6 @@ def findVendaGA_PD(service, options) -> list:
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as EC 
     from selenium.webdriver.chrome.options import Options
-    from joblib import Parallel, delayed
     try: from Imobiliarias.GA_PD__Padrao_Gama.main import linksVendaGA_PD
     except: from main import linksVendaGA_PD
     from selenium import webdriver
@@ -29,13 +28,23 @@ def findVendaGA_PD(service, options) -> list:
         driver.get(link)
         print(f"{links_infos[0].index(link)+1}/{len(links_infos[0])}", link)
 
+        pg_404 = False
+
+        while True:
+            try:
+                WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By. XPATH, '//*[@id="widget-container"]/mat-card/imobzi-widget-card/mat-card/mat-card-actions/imobzi-buttons-actions/button')))
+                break
+            except:
+                if driver.current_url == "https://www.gamavilhena.com.br/pagina-nao-encontrada":
+                    pg_404 = True
+                    break
+
+        if pg_404 == True: continue
+
         #Preenche os campos "Links", "Tipo do Imóvel" e "Tipo de Negócio":
         infos[0].append(link)
         infos[10].append(links_infos[1][index_links])
         infos[11].append(links_infos[2][index_links])
-
-
-        WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By. XPATH, '//*[@id="widget-container"]/mat-card/imobzi-widget-card/mat-card/mat-card-actions/imobzi-buttons-actions/button')))
 
         infos_primary = driver.find_elements(By. CLASS_NAME, "attributes-item.ng-star-inserted")
 
@@ -57,7 +66,7 @@ def findVendaGA_PD(service, options) -> list:
 
         #Bairro:
         text_neighborhood = driver.find_element(By. XPATH, '//*[@id="property-abstract"]/div[2]/imobzi-property-title/div/h3').text
-        text_neighborhood = text_neighborhood.replace("(vende-se)", "").replace("- Vilhena", "").replace(", RO","").split("em")[-1].strip()
+        text_neighborhood = text_neighborhood.replace("(vende-se)", "").replace("- Vilhena", "").replace(", RO","").split(" em ")[-1].split(" no ")[-1].strip()
         infos[8].append(text_neighborhood)
 
         #Valor:

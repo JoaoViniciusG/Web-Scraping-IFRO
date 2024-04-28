@@ -6,7 +6,7 @@ import pandas as pd
 #Execution status: [estate acronym: str, successfully executed: bool, exception: Exception (optional)]
 exec_status = []
 #instances = coleta_siglas()
-instances = ["CD_IC"]
+instances = ["GA_PD"]
 
 columns = ["Url", "Área Total", "Área Construída", "Dormitórios", "Suítes", "Banheiros", "Garagem", "Bairro", "Valor", "Tipo do Imóvel", "Tipo de Negócio", "Descrição"]
 
