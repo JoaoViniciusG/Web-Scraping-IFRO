@@ -26,7 +26,6 @@ for def_file in instances:
     exec_status.append([def_file, True])
     
     #Tratamento:
-    #list_res = [pd.Series(res_list) for res_list in response]
     list_res = []
 
     for f in range(len(response[0])):
